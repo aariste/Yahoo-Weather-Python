@@ -256,6 +256,6 @@ class YahooWeather:
 
 	def get_units(self):
 		return (self.__temperature_unit, self.__distance_unit, self.__pressure_unit, self.__speed_unit)
-
+		
 	def get_all_data(self):
 		return (self.__country, self.__city, self.__wind_chill, self.__wind_direction, self.__wind_speed, self.___cardinal_direction, self.__humidity, self.__visibility, self.__pressure, self.__rising, self.___sunrise, self.__sunset)
