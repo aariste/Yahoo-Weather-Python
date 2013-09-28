@@ -2,7 +2,7 @@ from xml.etree.ElementTree import parse
 import urllib
 
 YAHOO_NS = 'http://xml.weather.yahoo.com/ns/rss/1.0'
-GEO = 'http://www.w3.org/2003/01/geo/wgs84_pos#'
+GEO_NS = 'http://www.w3.org/2003/01/geo/wgs84_pos#'
 
 class YahooWeather:
 	def __init__(self, woeid, unit):
@@ -36,9 +36,16 @@ class YahooWeather:
 		self.__sunrise = ''
 		self.__sunset = ''
 
+		'''Current conditions'''
+		self.__condition = ''
+		self.__conditionCode = ''
+		self.__conditionTemp = 0
+		self.__conditionDate = ''
+
+		'''Geo'''
 		self.__pub_date = ''
-		self.__geo_latitude = ''
-		self.__geo_longitude = ''
+		self.__latitude = 0
+		self.__longitude = 0
 
 		'''Prediction'''
 		self.__description = ''
@@ -60,7 +67,9 @@ class YahooWeather:
 		self.__load_wind()
 		self.__load_atmosphere()
 		self.__load_sun()
+		self.__load_geo()
 		self.__load_pub_date()
+		self.__load_condition()
 		self.__load_description()
 		self.__load_forecast()
 		self.__load_cardinal_direction()
@@ -94,13 +103,23 @@ class YahooWeather:
 			self.__sunrise = element.get('sunrise')
 			self.__sunset = element.get('sunset')
 
-	def load_geo(self):
-		for element in self.__rss.iter('channel/item/{%s}' % GEO):
-			print element.get('lat')
+	def __load_geo(self):
+		for element in self.__rss.findall('channel/item/{%s}lat' % GEO_NS):
+			self.__latitude = element.text
+
+		for element in self.__rss.findall('channel/item/{%s}long' % GEO_NS):	
+			self.__longitude = element.text
 
 	def __load_pub_date(self):
 		for element in self.__rss.findall('channel/item/pubDate'):
 			self.__pub_date = element.text
+
+	def __load_condition(self):
+		for element in self.__rss.findall('channel/item/{%s}forecast' % YAHOO_NS):
+			self.__condition = element.get('text')
+			self.__conditionCode = element.get('code')
+			self.__conditionTemp = element.get('temp')
+			self.__conditionDate = element.get('date')
 
 	def __load_description(self):
 		for element in self.__rss.findall('channel/item/description'):
@@ -202,8 +221,26 @@ class YahooWeather:
 	def get_sunset(self):
 		return self.__sunset
 
+	def get_latitude(self):
+		return self.__latitude
+
+	def get_longitude(self):
+		return self.__longitude
+
 	def get_pub_date(self):
 		return self.__pub_date
+
+	def get_condition(self):
+		return self.__condition
+
+	def get_condition_code(self):
+		return self.__conditionCode
+
+	def get_condition_temp(self):
+		return self.__conditionTemp
+
+	def get_condition_date(self):
+		return self.__conditionDate
 
 	def get_description(self):
 		return self.__description
