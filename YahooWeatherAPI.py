@@ -15,16 +15,16 @@ class YahooWeather:
 		self.__city = ''
 
 		'''Units'''
-		self.__temperatureUnit = ''
-		self.__distanceUnit = ''
-		self.__pressureUnit = ''
-		self.__speedUnit = ''
+		self.__temperature_unit = ''
+		self.__distance_unit = ''
+		self.__pressure_unit = ''
+		self.__speed_unit = ''
 
 		'''Wind'''
-		self.__windChill = ''
-		self.__windDirection = 0
-		self.__windSpeed = ''
-		self.__cardinalDirection = ''
+		self.__wind_chill = ''
+		self.__wind_direction = 0
+		self.__wind_speed = ''
+		self.__cardinal_direction = ''
 
 		'''Atmosphere'''
 		self.__humidity = ''
@@ -38,9 +38,9 @@ class YahooWeather:
 
 		'''Current conditions'''
 		self.__condition = ''
-		self.__conditionCode = ''
-		self.__conditionTemp = 0
-		self.__conditionDate = ''
+		self.__condition_code = ''
+		self.__condition_temp = 0
+		self.__condition_date = ''
 
 		'''Geo'''
 		self.__pub_date = ''
@@ -81,16 +81,16 @@ class YahooWeather:
 
 	def __load_units(self):
 		for element in self.__rss.findall('channel/{%s}units' % YAHOO_NS):
-			self.__temperatureUnit = element.get('temperature')
-			self.__distanceUnit = element.get('distance')
-			self.__pressureUnit = element.get('pressure')
-			self.__speedUnit = element.get('speed')
+			self.__temperature_unit = element.get('temperature')
+			self.__distance_unit = element.get('distance')
+			self.__pressure_unit = element.get('pressure')
+			self.__speed_unit = element.get('speed')
 
 	def __load_wind(self):
 		for element in self.__rss.findall('channel/{%s}wind' % YAHOO_NS):
-			self.__windChill = element.get('chill')
-			self.__windDirection = element.get('direction')
-			self.__windSpeed = element.get('speed')
+			self.__wind_chill = element.get('chill')
+			self.__wind_direction = element.get('direction')
+			self.__wind_speed = element.get('speed')
 
 	def __load_atmosphere(self):
 		for element in self.__rss.findall('channel/{%s}atmosphere' % YAHOO_NS):
@@ -118,9 +118,9 @@ class YahooWeather:
 	def __load_condition(self):
 		for element in self.__rss.findall('channel/item/{%s}condition' % YAHOO_NS):
 			self.__condition = element.get('text')
-			self.__conditionCode = element.get('code')
-			self.__conditionTemp = element.get('temp')
-			self.__conditionDate = element.get('date')
+			self.__condition_code = element.get('code')
+			self.__condition_temp = element.get('temp')
+			self.__condition_date = element.get('date')
 
 	def __load_description(self):
 		for element in self.__rss.findall('channel/item/description'):
@@ -136,42 +136,42 @@ class YahooWeather:
 			self.__code.append(element.get('code'))
 
 	def __load_cardinal_direction(self):
-		windDirection = float(self.__windDirection)
+		wind_direction = float(self.__wind_direction)
 
-		if windDirection >= 348.75 and windDirection <= 11.25:
-			self.__cardinalDirection = 'N'
-		elif windDirection > 11.25 and windDirection <= 33.75:
-			self.__cardinalDirection = 'NNE'
-		elif windDirection > 33.75 and windDirection <= 56.25:
-			self.__cardinalDirection = 'NE'
-		elif windDirection > 56.25 and windDirection <= 78.75:
-			self.__cardinalDirection = 'ENE'
-		elif windDirection > 78.75 and windDirection <= 101.25:
-			self.__cardinalDirection = 'E'
-		elif windDirection > 101.25 and windDirection <= 123.75:
-			self.__cardinalDirection = 'ESE'
-		elif windDirection > 123.75 and windDirection <= 146.25:
-			self.__cardinalDirection = 'SE'
-		elif windDirection > 146.25 and windDirection <= 168.75:
-			self.__cardinalDirection = 'SSE'
-		elif windDirection > 168.75 and windDirection <= 191.25:
-			self.__cardinalDirection = 'S'
-		elif windDirection > 191.25 and windDirection <= 213.75:
-			self.__cardinalDirection = 'SSO'
-		elif windDirection > 213.75 and windDirection <= 236.25:
-			self.__cardinalDirection = 'SO'
-		elif windDirection > 247.5 and windDirection <= 270:
-			self.__cardinalDirection = 'OSO'
-		elif windDirection > 270 and windDirection <= 292.5:
-			self.__cardinalDirection = 'O'
-		elif windDirection > 292.5 and windDirection <= 315:
-			self.__cardinalDirection = 'ONO'
-		elif windDirection > 315 and windDirection <= 337.5:
-			self.__cardinalDirection = 'NO'
-		elif windDirection > 337.5 and windDirection <= 348.75:
-			self.__cardinalDirection = 'NNO'
+		if wind_direction >= 348.75 and wind_direction <= 11.25:
+			self.__cardinal_direction = 'N'
+		elif wind_direction > 11.25 and wind_direction <= 33.75:
+			self.__cardinal_direction = 'NNE'
+		elif wind_direction > 33.75 and wind_direction <= 56.25:
+			self.__cardinal_direction = 'NE'
+		elif wind_direction > 56.25 and wind_direction <= 78.75:
+			self.__cardinal_direction = 'ENE'
+		elif wind_direction > 78.75 and wind_direction <= 101.25:
+			self.__cardinal_direction = 'E'
+		elif wind_direction > 101.25 and wind_direction <= 123.75:
+			self.__cardinal_direction = 'ESE'
+		elif wind_direction > 123.75 and wind_direction <= 146.25:
+			self.__cardinal_direction = 'SE'
+		elif wind_direction > 146.25 and wind_direction <= 168.75:
+			self.__cardinal_direction = 'SSE'
+		elif wind_direction > 168.75 and wind_direction <= 191.25:
+			self.__cardinal_direction = 'S'
+		elif wind_direction > 191.25 and wind_direction <= 213.75:
+			self.__cardinal_direction = 'SSO'
+		elif wind_direction > 213.75 and wind_direction <= 236.25:
+			self.__cardinal_direction = 'SO'
+		elif wind_direction > 247.5 and wind_direction <= 270:
+			self.__cardinal_direction = 'OSO'
+		elif wind_direction > 270 and wind_direction <= 292.5:
+			self.__cardinal_direction = 'O'
+		elif wind_direction > 292.5 and wind_direction <= 315:
+			self.__cardinal_direction = 'ONO'
+		elif wind_direction > 315 and wind_direction <= 337.5:
+			self.__cardinal_direction = 'NO'
+		elif wind_direction > 337.5 and wind_direction <= 348.75:
+			self.__cardinal_direction = 'NNO'
 
-		return self.__cardinalDirection
+		return self.__cardinal_direction
 
 	'''public API'''
 	def get_country(self):
@@ -181,28 +181,28 @@ class YahooWeather:
 		return self.__city
 
 	def get_temperature_unit(self):
-		return self.__temperatureUnit
+		return self.__temperature_unit
 
 	def get_distance_unit(self):
-		return self.__distanceUnit
+		return self.__distance_unit
 
 	def get_pressure_unit(self):
-		return self.__pressureUnit
+		return self.__pressure_unit
 
 	def get_speed_unit(self):
-		return self.__speedUnit
+		return self.__speed_unit
 
 	def get_windchill(self):
-		return self.__windChill
+		return self.__wind_chill
 
 	def get_winddirection(self):
-		print self.__windDirection
+		print self.__wind_direction
 
 	def get_windspeed(self):
-		return self.__windSpeed
+		return self.__wind_speed
 
 	def get_cardinal_direction(self):
-		return self.__cardinalDirection
+		return self.__cardinal_direction
 
 	def get_humidity(self):
 		return self._humidity
@@ -235,13 +235,13 @@ class YahooWeather:
 		return self.__condition
 
 	def get_condition_code(self):
-		return self.__conditionCode
+		return self.__condition_code
 
 	def get_condition_temp(self):
-		return self.__conditionTemp
+		return self.__condition_temp
 
 	def get_condition_date(self):
-		return self.__conditionDate
+		return self.__condition_date
 
 	def get_description(self):
 		return self.__description
@@ -255,7 +255,7 @@ class YahooWeather:
 		return (self.__day[days], self.__date[days], self.__low[days], self.__high[days], self.__text[days], self.__code[days])
 
 	def get_units(self):
-		return (self.__temperatureUnit, self.__distanceUnit, self.__pressureUnit, self.__speedUnit)
+		return (self.__temperature_unit, self.__distance_unit, self.__pressure_unit, self.__speed_unit)
 
 	def get_all_data(self):
-		return (self.__country, self.__city, self.__windChill, self.__windDirection, self.__windSpeed, self.___cardinalDirection, self.__humidity, self.__visibility, self.__pressure, self.__rising, self.___sunrise, self.__sunset)
+		return (self.__country, self.__city, self.__wind_chill, self.__wind_direction, self.__wind_speed, self.___cardinal_direction, self.__humidity, self.__visibility, self.__pressure, self.__rising, self.___sunrise, self.__sunset)
