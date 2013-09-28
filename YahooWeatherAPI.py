@@ -15,7 +15,7 @@ class YahooWeather:
 		self.__city = ''
 
 		'''Units'''
-		self.__temperatureUnit = unit
+		self.__temperatureUnit = ''
 		self.__distanceUnit = ''
 		self.__pressureUnit = ''
 		self.__speedUnit = ''
@@ -81,6 +81,7 @@ class YahooWeather:
 
 	def __load_units(self):
 		for element in self.__rss.findall('channel/{%s}units' % YAHOO_NS):
+			self.__temperatureUnit = element.get('temperature')
 			self.__distanceUnit = element.get('distance')
 			self.__pressureUnit = element.get('pressure')
 			self.__speedUnit = element.get('speed')
@@ -115,7 +116,7 @@ class YahooWeather:
 			self.__pub_date = element.text
 
 	def __load_condition(self):
-		for element in self.__rss.findall('channel/item/{%s}forecast' % YAHOO_NS):
+		for element in self.__rss.findall('channel/item/{%s}condition' % YAHOO_NS):
 			self.__condition = element.get('text')
 			self.__conditionCode = element.get('code')
 			self.__conditionTemp = element.get('temp')
