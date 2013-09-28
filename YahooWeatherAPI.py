@@ -258,4 +258,3 @@ class YahooWeather:
 
 	def get_all_data(self):
 		return (self.__country, self.__city, self.__windChill, self.__windDirection, self.__windSpeed, self.___cardinalDirection, self.__humidity, self.__visibility, self.__pressure, self.__rising, self.___sunrise, self.__sunset)
-	
