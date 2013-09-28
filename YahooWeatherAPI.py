@@ -2,6 +2,7 @@ from xml.etree.ElementTree import parse
 import urllib
 
 YAHOO_NS = 'http://xml.weather.yahoo.com/ns/rss/1.0'
+GEO = 'http://www.w3.org/2003/01/geo/wgs84_pos#'
 
 class YahooWeather:
 	def __init__(self, woeid, unit):
@@ -9,33 +10,37 @@ class YahooWeather:
 		self.__unit = unit				
 		self.__rss = ''
 		
-		'Location'
+		'''Location'''
 		self.__country = ''
 		self.__city = ''
 
-		'Units'
+		'''Units'''
 		self.__temperatureUnit = unit
 		self.__distanceUnit = ''
 		self.__pressureUnit = ''
 		self.__speedUnit = ''
 
-		'Wind'
+		'''Wind'''
 		self.__windChill = ''
 		self.__windDirection = 0
 		self.__windSpeed = ''
 		self.__cardinalDirection = ''
 
-		'Atmosphere'
+		'''Atmosphere'''
 		self.__humidity = ''
 		self.__visibility = ''
 		self.__pressure = ''
 		self.__rising = ''
 
-		'Sunrise & Sunset'
+		'''Sunrise & Sunset'''
 		self.__sunrise = ''
 		self.__sunset = ''
 
-		'Prediction'
+		self.__pub_date = ''
+		self.__geo_latitude = ''
+		self.__geo_longitude = ''
+
+		'''Prediction'''
 		self.__description = ''
 		self.__day = []
 		self.__date = []
@@ -44,54 +49,64 @@ class YahooWeather:
 		self.__text = []
 		self.__code = []
 
-		self._load_data()
+		self.__load_data()
 
-	def _load_data(self):
+	def __load_data(self):
 		url = 'http://weather.yahooapis.com/forecastrss?w=' + self.__woeid + '&u=' + self.__unit
 		self.__rss = parse(urllib.urlopen(url)).getroot()
 
-		self._load_location()
-		self._load_units()
-		self._load_wind()
-		self._load_atmosphere()
-		self._load_sun()
-		self._load_forecast()
-		self._load_cardinal_direction()
+		self.__load_location()
+		self.__load_units()
+		self.__load_wind()
+		self.__load_atmosphere()
+		self.__load_sun()
+		self.__load_pub_date()
+		self.__load_description()
+		self.__load_forecast()
+		self.__load_cardinal_direction()
 
-	def _load_location(self):
+	def __load_location(self):
 		for element in self.__rss.findall('channel/{%s}location' % YAHOO_NS):
 			self.__country = element.get('country')
 			self.__city = element.get('city')
 
-	def _load_units(self):
+	def __load_units(self):
 		for element in self.__rss.findall('channel/{%s}units' % YAHOO_NS):
 			self.__distanceUnit = element.get('distance')
 			self.__pressureUnit = element.get('pressure')
 			self.__speedUnit = element.get('speed')
 
-	def _load_wind(self):
+	def __load_wind(self):
 		for element in self.__rss.findall('channel/{%s}wind' % YAHOO_NS):
 			self.__windChill = element.get('chill')
 			self.__windDirection = element.get('direction')
 			self.__windSpeed = element.get('speed')
 
-	def _load_atmosphere(self):
+	def __load_atmosphere(self):
 		for element in self.__rss.findall('channel/{%s}atmosphere' % YAHOO_NS):
 			self.__humidity = element.get('humidity')
 			self.__visibility = element.get('visibility')
 			self.__pressure = element.get('pressure')
 			self.__rising = element.get('rising')
 
-	def _load_sun(self):
+	def __load_sun(self):
 		for element in self.__rss.findall('channel/{%s}astronomy' % YAHOO_NS):
 			self.__sunrise = element.get('sunrise')
 			self.__sunset = element.get('sunset')
 
-	def _load_description(self):
-		for element in self.__rss.findall('channel/item/description'):
-			self.__description = element.get('description')
+	def load_geo(self):
+		for element in self.__rss.iter('channel/item/{%s}' % GEO):
+			print element.get('lat')
 
-	def _load_forecast(self):
+	def __load_pub_date(self):
+		for element in self.__rss.findall('channel/item/pubDate'):
+			self.__pub_date = element.text
+
+	def __load_description(self):
+		for element in self.__rss.findall('channel/item/description'):
+			self.__description = element.text
+
+	def __load_forecast(self):
 		for element in self.__rss.findall('channel/item/{%s}forecast' % YAHOO_NS):
 			self.__day.append(element.get('day'))
 			self.__date.append(element.get('date'))
@@ -100,7 +115,7 @@ class YahooWeather:
 			self.__text.append(element.get('text'))
 			self.__code.append(element.get('code'))
 
-	def _load_cardinal_direction(self):
+	def __load_cardinal_direction(self):
 		windDirection = float(self.__windDirection)
 
 		if windDirection >= 348.75 and windDirection <= 11.25:
@@ -181,22 +196,27 @@ class YahooWeather:
 	def get_rising(self):
 		return self.__rising
 
-	def get__sunrise(self):
+	def get_sunrise(self):
 		return self.__sunrise
 
 	def get_sunset(self):
 		return self.__sunset
 
+	def get_pub_date(self):
+		return self.__pub_date
+
 	def get_description(self):
 		return self.__description
 
-	def get__forecast(self, days):
+	def get_forecast(self, days):
+		days = int(days)
+
 		if days > 4:
 			return ''
 
 		return (self.__day[days], self.__date[days], self.__low[days], self.__high[days], self.__text[days], self.__code[days])
 
-	def get__units(self):
+	def get_units(self):
 		return (self.__temperatureUnit, self.__distanceUnit, self.__pressureUnit, self.__speedUnit)
 
 	def get_all_data(self):
